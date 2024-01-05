@@ -23,6 +23,8 @@ def canUnlockAll(boxes):
         if len(i) == 0 and i is not boxes[n-1]:
             return False
         for j in i:
+            if j is None:
+                continue
             newList.append(j)
     for index, key in enumerate(boxes):
         if index in newList or index < n-1:
