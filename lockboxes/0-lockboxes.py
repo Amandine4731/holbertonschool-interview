@@ -20,7 +20,7 @@ def canUnlockAll(boxes):
         return False
 
     for i in boxes:
-        if len(i) == 0 and i is not boxes[n-1]:
+        if (len(i) == 0 or boxes is None) and i is not boxes[n-1]:
             return False
         for j in i:
             newList.append(j)
