@@ -1,6 +1,6 @@
 #include "sandpiles.h"
 /**
- * Function that computes the sum of two sandpiles :
+ * sandpiles_sum - Function that computes the sum of two sandpiles :
  * Prototype: void sandpiles_sum(int grid1[3][3], int grid2[3][3]);
  * That both grid1 and grid2 are individually stable
  * A sandpile is considered stable when none of its cells
