@@ -8,7 +8,9 @@
  * When the function is done, grid1 must be stable
  * grid1 must be printed before each toppling round,
  * only if it is unstable (See example)
- */
+ * @grid1: first sandpile
+ * @grid2: second sandpile
+ **/
 
 void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 {
