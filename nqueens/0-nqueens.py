@@ -12,22 +12,22 @@ def nqueens(N):
     """ N queens """
 
     if len(sys.argv) != 2:
-        print('Usage: nqueens N\n')
+        print('Usage: nqueens N')
         exit(1)
 
     try:
         N = int(N)
     except ValueError:
-        print('N must be a number\n')
+        print('N must be a number')
         exit(1)
 
     if N < 4:
-        print('N must be at least 4\n')
+        print('N must be at least 4')
         exit(1)
 
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print('Usage: nqueens N\n')
+        print('Usage: nqueens N')
         exit(1)
     nqueens(sys.argv[1])
