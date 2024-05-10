@@ -67,5 +67,4 @@ void heap_sort(int *array, size_t size)
 		print_array(array, size_init);
 		check_tree(array, size_init, size - i - 1, 0);
 	}
-
 }
