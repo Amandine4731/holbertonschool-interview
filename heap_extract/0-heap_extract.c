@@ -8,20 +8,25 @@
  */
 int heap_extract(heap_t **root)
 {
+    int value, height, idx, path;
+    heap_t *last, *parent, *current, *larger_child;
+    
     if (!root || !*root)
         return (0);
 
-    int value = (*root)->n;
-    heap_t *last = *root, *parent = NULL, *current = *root;
-    int height = 0, idx, path;
-    
-    // Calculate height of the heap
+    value = (*root)->n;
+    last = *root;
+    parent = NULL;
+    current = *root;
+    height = 0;
+
+    /* Calculate height of the heap */
     while (current) {
         height++;
         current = current->left;
     }
     
-    // Find the last node
+    /* Find the last node */
     current = *root;
     for (idx = 1, path = 1 << (height - 2); path > 0; path >>= 1) {
         parent = current;
@@ -33,20 +38,20 @@ int heap_extract(heap_t **root)
     }
     last = current;
 
-    // Replace root with the last node
+    /* Replace root with the last node */
     (*root)->n = last->n;
     if (parent && parent->left == last)
         parent->left = NULL;
     else if (parent)
         parent->right = NULL;
     
-    // Free the last node
+    /* Free the last node */
     free(last);
 
-    // Restore the heap property by sifting down
+    /* Restore the heap property by sifting down */
     current = *root;
     while (current->left) {
-        heap_t *larger_child = current->left;
+        larger_child = current->left;
         if (current->right && current->right->n > current->left->n)
             larger_child = current->right;
 
