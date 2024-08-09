@@ -28,11 +28,6 @@ int is_palindrome(listint_t **head) {
 
     *head = temp;
 
-    /* fail if the list is impair */
-    if (length_list % 2 != 0) {
-        return (0);
-    }
-
     First_part = (int *)malloc((length_list / 2) * sizeof(int));
     Second_part = (int *)malloc((length_list / 2) * sizeof(int));
 
