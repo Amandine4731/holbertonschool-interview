@@ -5,7 +5,7 @@
 
 def island_perimeter(grid):
     """
-    Input: a list of list of integers
+    Input: a list of list of integers.
     Returns: Perimeter of the island
     """
     count = 0
