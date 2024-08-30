@@ -7,6 +7,7 @@
  *
  * Return: 1 if the pattern matches the string, 0 otherwise.
  */
+ 
 int regex_match(const char *str, const char *pattern)
 {
     if (*pattern == '\0')
