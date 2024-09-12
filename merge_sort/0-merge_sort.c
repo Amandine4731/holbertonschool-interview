@@ -1,99 +1,105 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "sort.h"
 
 /**
- * merge - merges the copied array into the original one
- * @array: updated array of integers to sort
- * @arrCopy: copy of the array
- * @left: beginning of array;
- * @right: end of array;
- * @mid: half point between left and right
- *
- * return: nothing
- */
-void merge(int *array, int *arrCopy, int left, int right, int mid)
+ * top_down_merge - merge the resulting runs from array B[] into A[]
+ * @A: array to copy
+ * @iBegin: starting index
+ * @iMiddle: middle index
+ * @iEnd: ending index
+ * @B: work array
+*/
+void top_down_merge(int *B, size_t iBegin, size_t iMiddle, size_t iEnd, int *A)
 {
-	int start, end, i = left;
+	/*  Left source half is A[iBegin:iMiddle-1]. */
+	/* Right source half is A[iMiddle:iEnd-1]. */
+	/* Result is            B[iBegin:iEnd-1]. */
+	size_t i = iBegin, j = iMiddle, k;
 
-	start = left;
-	end = mid;
 	printf("Merging...\n");
 	printf("[left]: ");
-	print_array(arrCopy + left, mid - left);
+	print_array(&A[iBegin], iMiddle - iBegin);
 	printf("[right]: ");
-	print_array(arrCopy + mid, right - mid);
-	while (start < mid && end < right)
+	print_array(&A[iMiddle], iEnd - iMiddle);
+
+	/* While there are elements in the left or right runs... */
+	for (k = iBegin; k < iEnd; k++)
 	{
-		if (arrCopy[start] < arrCopy[end])
+		/* If left run head exists and is <= existing right run head. */
+		if (i < iMiddle && (j >= iEnd || A[i] <= A[j]))
 		{
-			array[i] = arrCopy[start];
-			start++;
-		} else
-		{
-			array[i] = arrCopy[end];
-			end++;
+			B[k] = A[i];
+			i = i + 1;
 		}
-		i++;
-	}
-	while (start < mid)
-	{
-		array[i] = arrCopy[start];
-		i++;
-		start++;
-	}
-	while (end <= right)
-	{
-		array[i] = arrCopy[end];
-		i++;
-		end++;
+		else
+		{
+			B[k] = A[j];
+			j = j + 1;
+		}
 	}
 	printf("[Done]: ");
-	print_array(array + left, right - left);
+	print_array(&B[iBegin], iEnd - iBegin);
 }
 
 /**
- * split - splits the array in half and calls merge()
- * @array: array to sort
- * @arrCopy: copy of the array to sort
- * @left: beggining of the array
- * @right: end of the array
- *
- * return: nothing
- */
-void split(int *array, int *arrCopy, int left, int right)
+ * top_down_split_merge - Split A[] into 2 runs,
+ * sort both runs into B[],
+ * merge both runs from B[] to A[]
+ * @A: array to copy
+ * @iBegin: starting index
+ * @iEnd: ending index
+ * @B: work array
+ * iBegin is inclusive; iEnd is exclusive (A[iEnd] is not in the set)
+*/
+void top_down_split_merge(int *B, size_t iBegin, size_t iEnd, int *A)
 {
-	int mid = left + (right - left) / 2;
+	size_t iMiddle;
 
-	if (right - left <= 1)
-		return;
+	if (iEnd - iBegin <= 1) /* if run size == 1 */
+		return;				/*   consider it sorted */
+	/* split the run longer than 1 item into halves */
+	iMiddle = (iEnd + iBegin) / 2; /* iMiddle = mid point */
+	/* recursively sort both runs from array A[] into B[] */
+	top_down_split_merge(A, iBegin, iMiddle, B); /* sort the left  run */
+	top_down_split_merge(A, iMiddle, iEnd, B);	  /* sort the right run */
+	/* merge the resulting runs from array B[] into A[] */
+	top_down_merge(B, iBegin, iMiddle, iEnd, A);
+}
 
-	split(arrCopy, array, left, mid);
-	split(arrCopy, array, mid, right);
-	merge(array, arrCopy, left, right, mid);
+/**
+ * copy_array - copy into the elements of A into work array B
+ * @A: array to copy
+ * @iBegin: starting index
+ * @n: n elements
+ * @B: work array
+*/
+void copy_array(int *A, size_t iBegin, size_t n, int *B)
+{
+	size_t k;
+
+	for (k = iBegin; k < n; k++)
+		B[k] = A[k];
 }
 
 /**
  * merge_sort - sorts an array of integers in ascending order
- * @array: array of integers to sort
- * @size: size of the array
- *
- * return: nothing
- */
-void merge_sort(int *array, size_t size)
+ * using the Merge Sort algorithm:
+ * must implement the top-down merge sort algorithm
+ * When you divide an array into two sub-arrays,
+ * the size of the left array should always be <= the size of the right array.
+ * i.e. {1, 2, 3, 4, 5} -> {1, 2}, {3, 4, 5}
+ * Sort the left array before the right array
+ * Array A[] has the items to sort
+ * @A: array to sort
+ * @n: n elements of A
+*/
+void merge_sort(int *A, size_t n)
 {
-	int *arrCopy;
-	size_t i = 0;
+	int *B = malloc(sizeof(int) * n);  /* array B is a work array. */
 
-	if (!array || size < 2)
+	if (!B)
 		return;
 
-	arrCopy = malloc(size * sizeof(int));
-	if (!arrCopy)
-		return;
-	for (; i < size; i++)
-		arrCopy[i] = array[i];
-
-	split(array, arrCopy, 0, size);
-	free(arrCopy);
+	copy_array(A, 0, n, B);		   /* one time copy of A[] to B[] */
+	top_down_split_merge(A, 0, n, B); /* sort data from B[] into A[] */
+	free(B);
 }
