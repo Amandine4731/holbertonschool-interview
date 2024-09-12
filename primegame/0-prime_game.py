@@ -1,6 +1,10 @@
 #!/usr/bin/python3
+''' prime game '''
+
+
+
 def isWinner(x, nums):
-    # Helper function to calculate primes up to a maximum value using Sieve of Eratosthenes
+    ''' Helper function to calculate primes up to a maximum value using Sieve of Eratosthenes '''
     def sieve(max_num):
         is_prime = [True] * (max_num + 1)
         p = 2
